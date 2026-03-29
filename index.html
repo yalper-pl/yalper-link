@@ -15,16 +15,32 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
+            text-align: center;
         }
         h2 { margin-bottom: 10px; }
-        p { color: #888888; }
+        p { color: #888888; margin-bottom: 20px; }
+        .close-btn {
+            background-color: #1f538d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            display: none; /* Скрыта по умолчанию */
+        }
+        .close-btn:hover { background-color: #14375d; }
     </style>
 </head>
 <body>
     <div id="status">
         <h2>Открываем трек... 🎧</h2>
-        <p>Если браузер спросит разрешение, нажмите «Открыть».</p>
+        <p>Если браузер спросит разрешение, нажмите <b>«Открыть»</b> или <b>«Разрешить»</b>.</p>
     </div>
+    
+    <!-- Кнопка для ручного закрытия, появится чуть позже -->
+    <button id="closeBtn" class="close-btn" onclick="window.close()">Закрыть эту вкладку</button>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
@@ -34,16 +50,15 @@
             // 1. Вызываем приложение Yalper
             window.location.href = "yalper://play/" + trackData;
             
-            // 2. Ждем полсекунды (чтобы ОС успела перехватить ссылку) 
-            // и пытаемся агрессивно закрыть вкладку
+            // 2. Ждем 4 секунды (4000 мс), чтобы человек успел нажать "Разрешить" в браузере
             setTimeout(() => {
-                // Меняем текст на случай, если браузер заблокирует закрытие
-                document.getElementById('status').innerHTML = "<h2>Трек открыт в Yalper! 🚀</h2><p>Эту вкладку можно закрыть.</p>";
+                document.getElementById('status').innerHTML = "<h2>Трек открыт в Yalper! 🚀</h2><p>Теперь эту вкладку можно закрыть.</p>";
+                document.getElementById('closeBtn').style.display = "block"; // Показываем кнопку
                 
-                // Хак для обхода защиты window.close()
+                // Пытаемся закрыть автоматически
                 window.open('', '_self', ''); 
                 window.close();
-            }, 500);
+            }, 4000);
             
         } else {
             document.getElementById('status').innerHTML = "<h2>Ошибка 😔</h2><p>Данные трека не найдены в ссылке.</p>";
