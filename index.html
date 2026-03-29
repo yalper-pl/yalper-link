@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Yalper Player</title>
+</head>
+<body>
+    <script>
+        // Достаем параметр ?track= из ссылки
+        const urlParams = new URLSearchParams(window.location.search);
+        const trackData = urlParams.get('track');
+        
+        if (trackData) {
+            // Перенаправляем браузер на наш протокол!
+            window.location.href = "yalper://play/" + trackData;
+            document.body.innerHTML = "<h2>Открываем Yalper...</h2><p>Если браузер спросит разрешение, нажмите 'Разрешить' или 'Открыть'.</p>";
+        } else {
+            document.body.innerHTML = "<h2>Ошибка: Трек не найден</h2>";
+        }
+    </script>
+</body>
+</html>
